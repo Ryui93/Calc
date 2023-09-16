@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Calculator</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .calculator {
+            background-color: #222;
+            border: 3px solid #444;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .display {
+            font-size: 24px;
+            text-align: right;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #444;
+            border: 2px solid #333;
+            border-radius: 5px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+            color: #fff;
+        }
+
+        .button-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            padding: 15px;
+            font-size: 18px;
+            background-color: #444;
+            border: 2px solid #222;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <div class="button-container">
+            <button onclick="appendToDisplay('7')">7</button>
+            <button onclick="appendToDisplay('8')">8</button>
+            <button onclick="appendToDisplay('9')">9</button>
+            <button onclick="performOperation('+')">+</button>
+            <button onclick="appendToDisplay('4')">4</button>
+            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('6')">6</button>
+            <button onclick="performOperation('-')">-</button>
+            <button onclick="appendToDisplay('1')">1</button>
+            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('3')">3</button>
+            <button onclick="performOperation('*')">*</button>
+            <button onclick="appendToDisplay('0')">0</button>
+            <button onclick="appendToDisplay('.')">.</button>
+            <button onclick="performOperation('/')">/</button>
+            <button onclick="calculateResult()">=</button>
+            <button onclick="calculateSquareRoot()">√</button>
+            <button onclick="calculatePercentage()">%</button>
+            <button onclick="clearEntry()">CE</button>
+        </div>
+    </div>
+
+    <script>
+        let currentInput = '';
+        let currentOperation = '';
+        let previousInput = '';
+        const displayElement = document.getElementById('display');
+
+        function appendToDisplay(value) {
+            currentInput += value;
+            displayElement.textContent = currentInput;
+        }
+
+        function clearEntry() {
+            currentInput = '';
+            displayElement.textContent = '0';
+        }
+
+        function performOperation(operation) {
+            if (currentOperation) {
+                calculateResult();
+            }
+            currentOperation = operation;
+            previousInput = currentInput;
+            currentInput = '';
+        }
+
+        function calculateResult() {
+            let result;
+            const num1 = parseFloat(previousInput);
+            const num2 = parseFloat(currentInput);
+
+            switch (currentOperation) {
+                case '+':
+                    result = num1 + num2;
+                    break;
+                case '-':
+                    result = num1 - num2;
+                    break;
+                case '*':
+                    result = num1 * num2;
+                    break;
+                case '/':
+                    if (num2 !== 0) {
+                        result = num1 / num2;
+                    } else {
+                        result = 'Error: Division by zero';
+                    }
+                    break;
+                default:
+                    result = 'Error';
+                    break;
+            }
+
+            currentInput = result.toString();
+            currentOperation = '';
+            displayElement.textContent = currentInput;
+        }
+
+        function calculateSquareRoot() {
+            const num = parseFloat(currentInput);
+            if (num >= 0) {
+                const result = Math.sqrt(num);
+                currentInput = result.toString();
+                displayElement.textContent = currentInput;
+            } else {
+                currentInput = 'Error';
+                displayElement.textContent = currentInput;
+            }
+        }
+
+        function calculatePercentage() {
+            const num = parseFloat(currentInput);
+            const result = num / 100;
+            currentInput = result.toString();
+            displayElement.textContent = currentInput;
+        }
+    </script>
+</body>
+</html>
